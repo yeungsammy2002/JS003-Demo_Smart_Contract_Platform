@@ -1,0 +1,24 @@
+{
+  "name": "js003-demo_smart_contract_platform",
+  "version": "1.0.0",
+  "description": "This is a demo smart contract platform running on top of decentralized blockchain.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-test": "nodemon dev-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yeungsammy2002/JS003-Demo_Smart_Contract_Platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yeungsammy2002/JS003-Demo_Smart_Contract_Platform/issues"
+  },
+  "homepage": "https://github.com/yeungsammy2002/JS003-Demo_Smart_Contract_Platform#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
