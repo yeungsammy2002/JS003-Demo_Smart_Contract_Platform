@@ -4,7 +4,7 @@
   "description": "This is a demo smart contract platform running on top of decentralized blockchain.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watchAll",
     "dev-test": "nodemon dev-test"
   },
   "repository": {
@@ -20,5 +20,8 @@
   "homepage": "https://github.com/yeungsammy2002/JS003-Demo_Smart_Contract_Platform#readme",
   "devDependencies": {
     "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "jest": "^28.1.2"
   }
 }

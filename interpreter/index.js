@@ -4,6 +4,32 @@ const SUB = "SUB";
 const MUL = "MUL";
 const DIV = "DIV";
 const PUSH = "PUSH";
+const LT = "LT";
+const GT = "GT";
+const EQ = "EQ";
+const AND = "AND";
+const OR = "OR";
+const JUMP = "JUMP";
+const JUMPI = "JUMPI";
+
+const OPCODE_MAP = {
+  STOP: "STOP",
+  ADD: "ADD",
+  SUB: "SUB",
+  MUL: "MUL",
+  DIV: "DIV",
+  PUSH: "PUSH",
+  LT: "LT",
+  GT: "GT",
+  EQ: "EQ",
+  AND: "AND",
+  OR: "OR",
+  JUMP: "JUMP",
+  JUMPI: "JUMPI",
+};
+
+const EXECUTION_COMPLETE = "Execution complete";
+const EXECUTION_LIMIT = 10000;
 
 class Interpreter {
   constructor() {
@@ -11,20 +37,36 @@ class Interpreter {
       programCounter: 0,
       stack: [],
       code: [],
+      executionCount: 0,
     };
+  }
+
+  jump() {
+    const destination = this.state.stack.pop();
+    if (destination < 0 || destination > this.state.code.length)
+      throw new Error(`Invalid destination: ${destination}`);
+    this.state.programCounter = destination;
+    this.state.programCounter--;
   }
 
   runCode(code) {
     this.state.code = code;
     while (this.state.programCounter < this.state.code.length) {
+      this.state.executionCount++;
+      if (this.state.executionCount > EXECUTION_LIMIT)
+        throw new Error(
+          `Check for an infinite loop. Execution limit of ${EXECUTION_LIMIT} exceeded`
+        );
       const opCode = this.state.code[this.state.programCounter];
 
       try {
         switch (opCode) {
           case STOP:
-            throw new Error("Execution completion");
+            throw new Error(EXECUTION_COMPLETE);
           case PUSH:
             this.state.programCounter++;
+            if (this.state.programCounter === this.state.code.length)
+              throw new Error(`The 'PUSH' instruction cannot be last.`);
             const value = this.state.code[this.state.programCounter];
             this.state.stack.push(value);
             break;
@@ -32,6 +74,11 @@ class Interpreter {
           case SUB:
           case MUL:
           case DIV:
+          case LT:
+          case GT:
+          case EQ:
+          case AND:
+          case OR:
             const a = this.state.stack.pop();
             const b = this.state.stack.pop();
             let result;
@@ -39,13 +86,27 @@ class Interpreter {
             if (opCode === SUB) result = a - b;
             if (opCode === MUL) result = a * b;
             if (opCode === DIV) result = a / b;
+            if (opCode === LT) result = a < b ? 1 : 0;
+            if (opCode === GT) result = a > b ? 1 : 0;
+            if (opCode === EQ) result = a === b ? 1 : 0;
+            if (opCode === AND) result = a && b ? 1 : 0;
+            if (opCode === OR) result = a || b ? 1 : 0;
             this.state.stack.push(result);
+            break;
+          case JUMP:
+            this.jump();
+            break;
+          case JUMPI:
+            const condition = this.state.stack.pop();
+            if (condition === 1) this.jump();
             break;
           default:
             break;
         }
       } catch (error) {
-        return this.state.stack[this.state.stack.length - 1];
+        if (error.message === EXECUTION_COMPLETE)
+          return this.state.stack[this.state.stack.length - 1];
+        throw error;
       }
 
       this.state.programCounter++;
@@ -53,4 +114,5 @@ class Interpreter {
   }
 }
 
+Interpreter.OPCODE_MAP = OPCODE_MAP;
 module.exports = Interpreter;
