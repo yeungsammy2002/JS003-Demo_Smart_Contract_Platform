@@ -8,3 +8,7 @@ const str = JSON.stringify(blockchain);
 
 const sortedStr = sortCharacters(blockchain);
 // console.log(sortedStr);
+
+// console.log(parseInt("f".repeat(64), 16));
+// console.log(parseInt("f".repeat(64), 16).toString(16));
+// console.log(parseInt("f".repeat(64), 16).toString(16).length);
