@@ -73,7 +73,7 @@ class Block {
     return new Promise((resolve, reject) => {
       if (keccakHash(block) === keccakHash(Block.genesis())) return resolve();
 
-      if (keccakHash(lastBlock.blockHeaders) !== block.blockHeadeers.parentHash)
+      if (keccakHash(lastBlock.blockHeaders) !== block.blockHeaders.parentHash)
         return reject(
           new Error(
             "The parent hash must be a hash of the last block's headers"

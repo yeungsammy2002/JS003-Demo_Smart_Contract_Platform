@@ -90,7 +90,6 @@ describe("Block", () => {
 
     it("rejects when the parentHash is invalid", () => {
       block.blockHeaders.parentHash = "foo";
-      // console.log(block.blockHeaders.parentHash);
       expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
         message: "The parent hash must be a hash of the last block's headers",
       });
