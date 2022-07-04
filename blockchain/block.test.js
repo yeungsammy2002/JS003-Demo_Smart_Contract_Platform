@@ -72,4 +72,28 @@ describe("Block", () => {
       ).toEqual(4);
     });
   });
+
+  describe("validateBlock()", () => {
+    let block, lastBlock;
+    beforeEach(() => {
+      lastBlock = Block.genesis();
+      block = Block.mineBlock({ lastBlock, beneficiary: "beneficiary" });
+    });
+
+    it("resolves when the block is the genesis block", () => {
+      expect(Block.validateBlock({ block: Block.genesis() })).resolves;
+    });
+
+    it("resolves if block is valid", () => {
+      expect(Block.validateBlock({ lastBlock, block })).resolves;
+    });
+
+    it("rejects when the parentHash is invalid", () => {
+      block.blockHeaders.parentHash = "foo";
+      // console.log(block.blockHeaders.parentHash);
+      expect(Block.validateBlock({ lastBlock, block })).rejects.toMatchObject({
+        message: "The parent hash must be a hash of the last block's headers",
+      });
+    });
+  });
 });
