@@ -5,7 +5,17 @@ class Blockchain {
     this.chain = [Block.genesis()];
   }
   addBlock({ block }) {
-    this.chain.push(block);
+    return new Promise((resovle, reject) => {
+      Block.validateBlock({
+        lastBlock: this.chain[this.chain.length - 1],
+        block,
+      })
+        .then(() => {
+          this.chain.push(block);
+          return resovle();
+        })
+        .catch(reject);
+    });
   }
 }
 

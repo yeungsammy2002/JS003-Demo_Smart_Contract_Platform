@@ -92,8 +92,8 @@ class Block {
 
       const target = Block.calculateBlockTargetHash({ lastBlock });
       const { blockHeaders } = block;
-      const nonce = blockHeaders;
-      truncatedBlockHeaders = { ...blockHeaders };
+      const { nonce } = blockHeaders;
+      const truncatedBlockHeaders = { ...blockHeaders };
       delete truncatedBlockHeaders.nonce;
       const header = keccakHash(truncatedBlockHeaders);
       const underTargetHash = keccakHash(header + nonce);
