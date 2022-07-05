@@ -10,6 +10,12 @@ class Account {
   sign(data) {
     return this.keyPair.sign(keccakHash(data));
   }
+  toJSON() {
+    return {
+      address: this.address,
+      balance: this.balance,
+    };
+  }
   static verifySignature({ publicKey, data, signature }) {
     const keyFromPublic = ec.keyFromPublic(publicKey, "hex");
     return keyFromPublic.verify(keccakHash(data), signature);

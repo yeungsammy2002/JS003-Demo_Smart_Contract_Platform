@@ -10,6 +10,9 @@
     "test": "jest --watchAll",
     "dev-test": "nodemon dev-test2"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yeungsammy2002/JS003-Demo_Smart_Contract_Platform.git"
