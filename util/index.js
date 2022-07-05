@@ -1,4 +1,7 @@
 const keccak256 = require("js-sha3").keccak256;
+const EC = require("elliptic").ec;
+
+const ec = new EC("secp256k1");
 
 const sortCharacters = (data) => {
   // sortCharacters is used to return the same string even if the object has
@@ -12,4 +15,4 @@ const keccakHash = (data) => {
   return hash.hex();
 };
 
-module.exports = { sortCharacters, keccakHash };
+module.exports = { sortCharacters, keccakHash, ec };
