@@ -1,5 +1,6 @@
 const PubNub = require("pubnub");
 const uuid = require("uuid");
+const Transaction = require("../transaction");
 
 const credentials = {
   publishKey: "pub-c-7afd2b1c-af24-476c-bde0-6940c4bdc9ff",
@@ -40,14 +41,22 @@ class PubSub {
           case CHANNELS_MAP.BLOCK:
             console.log("block message", message);
             this.blockchain
-              .addBlock({ block: parsedMessage })
-              .then(() => console.log("New block accepted"))
+              .addBlock({
+                block: parsedMessage,
+                transactionQueue: this.transactionQueue,
+              })
+              .then(() => console.log("New block accepted", parsedMessage))
               .catch((error) =>
                 console.error("New block rejected:", error.message)
               );
             break;
           case CHANNELS_MAP.TRANSACTION:
-            console.log(`Received transactiono: ${parsedMessage.id}`);
+            console.log(`Received transaction: ${parsedMessage.id}`);
+            this.transactionQueue.add(new Transaction(parsedMessage));
+            // console.log(
+            //   "this.transactionQueue.getTransactionSeries()",
+            //   this.transactionQueue.getTransactionSeries()
+            // );
             break;
           default:
             return;

@@ -8,20 +8,24 @@ const Transaction = require("../transaction");
 const TransactionQueue = require("../transaction/transaction-queue");
 
 const app = express();
+app.use(express.json());
+
 const blockchain = new Blockchain();
 const transactionQueue = new TransactionQueue();
-const pubsub = new PubSub({ blockchain });
+const pubsub = new PubSub({ blockchain, transactionQueue });
 const account = new Account();
 const transaction = Transaction.createTransaction({ account });
 
-transactionQueue.add(transaction);
+// transactionQueue.add(transaction);
 
 // console.log(
 //   "transactionQueue.getTransactionSeries()",
 //   transactionQueue.getTransactionSeries()
 // );
-
-app.use(express.json());
+setTimeout(() => {
+  pubsub.broadcastTransaction(transaction);
+  console.log("broadcast test xxx");
+}, 1000);
 
 app.get("/blockchain", (req, res, next) => {
   const { chain } = blockchain;
@@ -30,12 +34,16 @@ app.get("/blockchain", (req, res, next) => {
 
 app.get("/blockchain/mine", (req, res, next) => {
   const lastBlock = blockchain.chain[blockchain.chain.length - 1];
-  const block = Block.mineBlock({ lastBlock, beneficiary: account.address });
+  const block = Block.mineBlock({
+    lastBlock,
+    beneficiary: account.address,
+    transactionSeries: transactionQueue.getTransactionSeries(),
+  });
 
   // block.blockHeaders.parentHash = "foo";
 
   blockchain
-    .addBlock({ block })
+    .addBlock({ block, transactionQueue })
     .then(() => {
       pubsub.broadcastBlock(block);
       res.json({ block });
@@ -51,6 +59,7 @@ app.post("/account/transact", (req, res, next) => {
     value,
   });
   transactionQueue.add(transaction);
+  pubsub.broadcastTransaction(transaction);
   res.json({ transaction });
 });
 
@@ -66,7 +75,6 @@ const PORT = peer ? Math.floor(2000 + Math.random() * 1000) : 3000;
 if (peer) {
   request("http://localhost:3000/blockchain", (error, response, body) => {
     const { chain } = JSON.parse(body);
-
     // console.log("chain", chain);
     blockchain
       .replaceChain({ chain })
