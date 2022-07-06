@@ -11,12 +11,14 @@ const credentials = {
 const CHANNELS_MAP = {
   TEST: "TEST",
   BLOCK: "BLOCK",
+  TRANSACTION: "TRANSACTION",
 };
 
 class PubSub {
-  constructor({ blockchain }) {
+  constructor({ blockchain, transactionQueue }) {
     this.pubnub = new PubNub(credentials);
     this.blockchain = blockchain;
+    this.transactionQueue = transactionQueue;
     this.subscribeToChannels();
     this.listen();
   }
@@ -44,6 +46,9 @@ class PubSub {
                 console.error("New block rejected:", error.message)
               );
             break;
+          case CHANNELS_MAP.TRANSACTION:
+            console.log(`Received transactiono: ${parsedMessage.id}`);
+            break;
           default:
             return;
         }
@@ -54,6 +59,12 @@ class PubSub {
     this.publish({
       channel: CHANNELS_MAP.BLOCK,
       message: JSON.stringify(block),
+    });
+  }
+  broadcastTransaction(transaction) {
+    this.publish({
+      channel: CHANNELS_MAP.TRANSACTION,
+      message: JSON.stringify(transaction),
     });
   }
 }
