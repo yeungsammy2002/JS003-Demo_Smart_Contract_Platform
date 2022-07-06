@@ -4,6 +4,7 @@
   "description": "This is a demo smart contract platform running on top of decentralized blockchain.",
   "main": "index.js",
   "scripts": {
+    "api-test": "node ./api-test",
     "dev": "nodemon ./api",
     "dev-peer": "nodemon ./api --peer",
     "start": "node ./api",

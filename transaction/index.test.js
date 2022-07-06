@@ -16,7 +16,7 @@ describe("Transaction", () => {
     });
   });
 
-  describe("validateCreateAccountTransaction()", () => {
+  describe("validateStandardTransaction()", () => {
     it("validates a valid transaction", () => {
       expect(
         Transaction.validateStandardTransaction({
