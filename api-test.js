@@ -31,7 +31,7 @@ const getMine = () => {
 postTransact({})
   .then((postTransactResponse) => {
     console.log(
-      "postTransactionResponse (Create Account Transaction)",
+      "postTransactResponse (Create Account Transaction)",
       postTransactResponse
     );
 

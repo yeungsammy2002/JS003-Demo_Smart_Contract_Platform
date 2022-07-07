@@ -25,7 +25,7 @@ const transaction = Transaction.createTransaction({ account });
 setTimeout(() => {
   pubsub.broadcastTransaction(transaction);
   console.log("broadcast test xxx");
-}, 1000);
+}, 500);
 
 app.get("/blockchain", (req, res, next) => {
   const { chain } = blockchain;
