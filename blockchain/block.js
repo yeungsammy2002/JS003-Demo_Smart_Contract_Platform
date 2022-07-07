@@ -104,11 +104,11 @@ class Block {
         items: block.transactionSeries,
       });
 
-      console.log(rebuiltTransactionsTrie);
-      console.log(block.blockHeaders);
+      // console.log(rebuiltTransactionsTrie.rootHash);
+      // console.log(block.blockHeaders.transactionRoot);
 
       if (
-        rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionsRoot
+        rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionRoot
       )
         return reject(
           new Error(
