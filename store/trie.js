@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const { keccakHash } = require("../util");
 
 class Node {
@@ -21,7 +22,8 @@ class Trie {
       if (!node.childMap[character]) return null;
       else node = node.childMap[character];
     }
-    return node.value;
+    return _.cloneDeep(node.value);
+    // return node.value;
   }
   put({ key, value }) {
     let node = this.head;

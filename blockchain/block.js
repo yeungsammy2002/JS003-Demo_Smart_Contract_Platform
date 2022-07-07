@@ -1,5 +1,6 @@
 const { GENESIS_DATA, MINE_RATE } = require("../config");
 const { keccakHash } = require("../util");
+const Transaction = require("../transaction");
 
 const HASH_LENGTH = 64;
 const MAX_HASH_VALUE = parseInt("f".repeat(HASH_LENGTH), 16);
@@ -39,7 +40,7 @@ class Block {
     return difficulty + 1;
   }
 
-  static mineBlock({ lastBlock, beneficiary, transactionSeries }) {
+  static mineBlock({ lastBlock, beneficiary, transactionSeries, stateRoot }) {
     const target = Block.calculateBlockTargetHash({ lastBlock });
     let timestamp, truncatedBlockHeaders, header, nonce, underTargetHash;
 
@@ -54,6 +55,7 @@ class Block {
 
         // NOTE: the `transactionRoot` will be refactored once Tries are implemented.
         transactionRoot: keccakHash(transactionSeries),
+        stateRoot,
       };
       header = keccakHash(truncatedBlockHeaders);
       nonce = Math.floor(Math.random() * MAX_NONCE_VALUE);
@@ -110,6 +112,12 @@ class Block {
 
       return resolve();
     });
+  }
+
+  static runBlock({ block, state }) {
+    for (let transaction of block.transactionSeries) {
+      Transaction.runTransaction({ transaction, state });
+    }
   }
 }
 
