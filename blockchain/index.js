@@ -10,6 +10,7 @@ class Blockchain {
       Block.validateBlock({
         lastBlock: this.chain[this.chain.length - 1],
         block,
+        state: this.state,
       })
         .then(() => {
           this.chain.push(block);
@@ -29,7 +30,7 @@ class Blockchain {
         const lastBlockIndex = i - 1;
         const lastBlock = lastBlockIndex >= 0 ? chain[i - 1] : null;
         try {
-          await Block.validateBlock({ lastBlock, block });
+          await Block.validateBlock({ lastBlock, block, state: this.state });
           Block.runBlock({ block, state: this.state });
         } catch (error) {
           return reject(error);
