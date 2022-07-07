@@ -34,6 +34,13 @@ class Trie {
     node.value = value;
     this.generateRootHash();
   }
+  static buildTrie({ items }) {
+    const trie = new this();
+    for (let item of items.sort((a, b) => keccakHash(a) > keccakHash(b))) {
+      trie.put({ key: keccakHash(item), value: item });
+    }
+    return trie;
+  }
 }
 
 module.exports = Trie;
