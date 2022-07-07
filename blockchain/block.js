@@ -55,9 +55,9 @@ class Block {
         number: lastBlock.blockHeaders.number + 1,
         timestamp,
 
-        // NOTE: the `transactionRoot` will be refactored once Tries are implemented.
-        // transactionRoot: keccakHash(transactionSeries),
-        transactionRoot: transactionTrie.rootHash,
+        // NOTE: the `transactionsRoot` will be refactored once Tries are implemented.
+        // transactionsRoot: keccakHash(transactionSeries),
+        transactionsRoot: transactionTrie.rootHash,
         stateRoot,
       };
       header = keccakHash(truncatedBlockHeaders);
@@ -104,16 +104,16 @@ class Block {
         items: block.transactionSeries,
       });
 
-      // console.log(rebuiltTransactionsTrie.rootHash);
-      // console.log(block.blockHeaders.transactionRoot);
+      console.log(rebuiltTransactionsTrie);
+      console.log(block.blockHeaders);
 
       if (
-        rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionRoot
+        rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionsRoot
       )
         return reject(
           new Error(
             `The rebuilt transactions root does not match the block's ` +
-              `transactions root: ${block.blockHeaders.transactionRoot}` +
+              `transactions root: ${block.blockHeaders.transactionsRoot}` +
               ` rebuilt root: ${rebuiltTransactionsTrie.rootHash}`
           )
         );
