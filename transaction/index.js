@@ -46,7 +46,13 @@ class Transaction {
       const transactionData = { ...transaction };
       delete transactionData.signature;
 
-      if (!Account.verifySignature({ publicKey: from, data, signature })) {
+      if (
+        !Account.verifySignature({
+          publicKey: from,
+          data: transactionData,
+          signature,
+        })
+      ) {
         return reject(new Error(`Transaction: ${id} signature is invalid`));
       }
 
@@ -67,7 +73,7 @@ class Transaction {
         );
       }
       fields.forEach((field) => {
-        if (!expectedAccountDataFields.included(field)) {
+        if (!expectedAccountDataFields.includes(field)) {
           return reject(
             new Error(`The field: ${field}, is unexpected for account data`)
           );
