@@ -119,7 +119,7 @@ class Transaction {
       for (let transaction of transactionSeries) {
         try {
           switch (transaction.data.type) {
-            case TRANSACTION_TYPE_MAP_.CREATE_ACCOUNT:
+            case TRANSACTION_TYPE_MAP.CREATE_ACCOUNT:
               await Transaction.validateCreateAccountTransaction({
                 transaction,
               });
@@ -159,7 +159,7 @@ class Transaction {
         console.log("--Stored the account data");
         break;
       case TRANSACTION_TYPE_MAP.MINING_REWARD:
-        Transaction.runMinningRewardTransaction({ state, transaction });
+        Transaction.runMiningRewardTransaction({ state, transaction });
         console.log(" -- Updated account data to reflect the mining reward");
         break;
       default:

@@ -43,7 +43,11 @@ class Block {
 
   static mineBlock({ lastBlock, beneficiary, transactionSeries, stateRoot }) {
     const target = Block.calculateBlockTargetHash({ lastBlock });
-    const transactionTrie = Trie.buildTrie({ items: transactionSeries });
+    const miningRewardTransaction = Transaction.createTransaction({
+      beneficiary,
+    });
+    transactionSeries.push(miningRewardTransaction);
+    const transactionsTrie = Trie.buildTrie({ items: transactionSeries });
     let timestamp, truncatedBlockHeaders, header, nonce, underTargetHash;
 
     do {
@@ -57,7 +61,7 @@ class Block {
 
         // NOTE: the `transactionsRoot` will be refactored once Tries are implemented.
         // transactionsRoot: keccakHash(transactionSeries),
-        transactionsRoot: transactionTrie.rootHash,
+        transactionsRoot: transactionsTrie.rootHash,
         stateRoot,
       };
       header = keccakHash(truncatedBlockHeaders);

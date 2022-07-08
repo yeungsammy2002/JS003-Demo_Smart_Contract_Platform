@@ -60,7 +60,7 @@ app.post("/account/transact", (req, res, next) => {
     to,
     value,
   });
-  transactionQueue.add(transaction);
+  // transactionQueue.add(transaction);
   pubsub.broadcastTransaction(transaction);
   res.json({ transaction });
 });
