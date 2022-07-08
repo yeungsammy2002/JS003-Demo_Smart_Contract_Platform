@@ -104,8 +104,8 @@ class Block {
         items: block.transactionSeries,
       });
 
-      console.log(rebuiltTransactionsTrie);
-      console.log(block.blockHeaders);
+      // console.log(rebuiltTransactionsTrie);
+      // console.log(block);
 
       if (
         rebuiltTransactionsTrie.rootHash !== block.blockHeaders.transactionsRoot
@@ -113,8 +113,7 @@ class Block {
         return reject(
           new Error(
             `The rebuilt transactions root does not match the block's ` +
-              `transactions root: ${block.blockHeaders.transactionsRoot}` +
-              ` rebuilt root: ${rebuiltTransactionsTrie.rootHash}`
+              `transactions root: ${block.blockHeaders.transactionsRoot}`
           )
         );
 

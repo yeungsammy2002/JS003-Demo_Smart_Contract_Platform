@@ -145,6 +145,7 @@ describe("Block", () => {
       ).rejects.toMatchObject({
         message: /rebuilt transactions root does not match/,
       });
+      // expect(Block.validateBlock({ state, lastBlock, block })).resolves;
     });
   });
 });

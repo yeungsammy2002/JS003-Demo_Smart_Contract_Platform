@@ -23,6 +23,7 @@ describe("Trie", () => {
       expect(trie.rootHash).not.toEqual(originalRootHash);
     });
   });
+
   describe("get()", () => {
     it("returns a copy of the stored value", () => {
       const key = "foo";
