@@ -33,7 +33,8 @@ class Transaction {
         id: uuid.v4(),
         from: account.address,
         to,
-        value,
+        value: value || 0,
+        gasLimit: gasLimit || 0,
         data: { type: TRANSACTION_TYPE_MAP.TRANSACT },
       };
 
@@ -53,7 +54,7 @@ class Transaction {
 
   static validateStandardTransaction({ state, transaction }) {
     return new Promise((resolve, reject) => {
-      const { from, signature, value, to, gasLimit } = transaction;
+      const { id, from, signature, value, to, gasLimit } = transaction;
       const transactionData = { ...transaction };
       delete transactionData.signature;
 
@@ -78,7 +79,9 @@ class Transaction {
       if (!toAccount)
         return reject(new Error(`The to field: ${to} does not exist`));
       if (toAccount.codeHash) {
-        const { gasUsed } = new Interpreter().runCode(toAccount.code);
+        const { gasUsed } = new Interpreter({
+          storageTrie: state.storageTrieMap[toAccount.codeHash],
+        }).runCode(toAccount.code);
         if (gasUsed > gasLimit)
           return reject(
             new Error(
@@ -181,9 +184,13 @@ class Transaction {
   static runStandardTransaction({ state, transaction }) {
     const fromAccount = state.getAccount({ address: transaction.from });
     const toAccount = state.getAccount({ address: transaction.to });
+    let gasUsed = 0;
+    let result;
     if (toAccount.codeHash) {
-      const interpreter = new Interpreter();
-      const { gasUsed, result } = interpreter.runCode(toAccount.code);
+      const interpreter = new Interpreter({
+        storageTrie: state.storageTrieMap[toAccount.codeHash],
+      });
+      ({ gasUsed, result } = interpreter.runCode(toAccount.code));
       console.log(
         ` -*- Smart contract execution: ${transaction.id} - RESULT: ${result}`
       );

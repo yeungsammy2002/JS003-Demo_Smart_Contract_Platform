@@ -1,7 +1,23 @@
 const Interpreter = require("./index");
+const Trie = require("../store/trie");
 
-const { STOP, ADD, SUB, MUL, DIV, PUSH, LT, GT, EQ, AND, OR, JUMP, JUMPI } =
-  Interpreter.OPCODE_MAP;
+const {
+  STOP,
+  ADD,
+  SUB,
+  MUL,
+  DIV,
+  PUSH,
+  LT,
+  GT,
+  EQ,
+  AND,
+  OR,
+  JUMP,
+  JUMPI,
+  STORE,
+  LOAD,
+} = Interpreter.OPCODE_MAP;
 
 describe("Interpreter", () => {
   describe("runCode", () => {
@@ -113,6 +129,39 @@ describe("Interpreter", () => {
           ]).result
         ).toEqual("jump successful");
       });
+    });
+
+    describe("and the coode includes STORE", () => {
+      const interpreter = new Interpreter({
+        storageTrie: new Trie(),
+      });
+      const key = "foo";
+      const value = "bar";
+
+      interpreter.runCode([PUSH, value, PUSH, key, STORE, STOP]);
+      expect(interpreter.storageTrie.get({ key })).toEqual(value);
+    });
+
+    describe("and the code includes LOAD", () => {
+      const interpreter = new Interpreter({
+        storageTrie: new Trie(),
+      });
+      const key = "foo";
+      const value = "bar";
+
+      expect(
+        interpreter.runCode([
+          PUSH,
+          value,
+          PUSH,
+          key,
+          STORE,
+          PUSH,
+          key,
+          LOAD,
+          STOP,
+        ]).result
+      ).toEqual(value);
     });
 
     describe("and the code includes an invalid JUMP destination", () => {
