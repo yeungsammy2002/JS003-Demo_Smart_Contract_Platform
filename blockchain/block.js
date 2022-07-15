@@ -32,13 +32,12 @@ class Block {
   }
 
   static adjustDifficulty({ lastBlock, timestamp }) {
-    const { difficulty } = lastBlock.blockHeaders;
-    if (timestamp - lastBlock.blockHeaders.timestamp > MINE_RATE)
-      return difficulty - 1;
-
-    if (difficulty < 1) return 1;
-
-    return difficulty + 1;
+    let { difficulty } = lastBlock.blockHeaders;
+    if (timestamp - lastBlock.blockHeaders.timestamp > MINE_RATE) {
+      difficulty--;
+      if (difficulty < 1) return 1;
+    } else difficulty++;
+    return difficulty;
   }
 
   static mineBlock({ lastBlock, beneficiary, transactionSeries, stateRoot }) {

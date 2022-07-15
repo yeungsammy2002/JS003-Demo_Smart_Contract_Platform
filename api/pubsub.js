@@ -1,11 +1,12 @@
 const PubNub = require("pubnub");
 const uuid = require("uuid");
+require("dotenv").config();
 const Transaction = require("../transaction");
 
 const credentials = {
-  publishKey: "pub-c-7afd2b1c-af24-476c-bde0-6940c4bdc9ff",
-  subscribeKey: "sub-c-f0b752b8-88b1-4e97-957d-f32223c84753",
-  secretKey: "sec-c-MTg3MDE5MDktYjRlZi00ODk5LWE1NjctMGJmZjdhYzBkNDAy",
+  publishKey: process.env.PUBNUB_PUBLISH,
+  subscribeKey: process.env.PUBNUB_SUBSCRIBE,
+  secretKey: process.env.PUBNUB_SECRET,
   uuid: uuid.v1(), // new requirement from PubNub
 };
 
